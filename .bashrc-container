@@ -11,7 +11,7 @@ shopt -s histappend
 # ── Environment ───────────────────────────────────────────────────────────────
 export EDITOR="nvim"
 export LANG="en_US.UTF-8"
-export PATH="$HOME/.local/bin:/usr/local/bin:$PATH"
+export PATH="$HOME/.npm-global/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
 
 # pyenv (container-local, under jenkins user)
 export PYENV_ROOT="/var/lib/jenkins/.pyenv"

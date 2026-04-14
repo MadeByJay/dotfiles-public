@@ -47,8 +47,12 @@ link .config/nvim/lua/plugins/tools.lua
 
 # ── Codegraph (MCP for Claude Code) ──────────────────────────────────────────
 if command -v npm &>/dev/null; then
+    # Use user-local npm prefix so no sudo needed and binaries are on PATH
+    npm config set prefix "$HOME/.npm-global"
+    export PATH="$HOME/.npm-global/bin:$PATH"
+
     echo "  installing codegraph..."
-    sudo npm install -g @colbymchenry/codegraph
+    npm install -g @colbymchenry/codegraph
 
     # Wire up MCP servers in ~/.claude.json
     if command -v python3 &>/dev/null; then
