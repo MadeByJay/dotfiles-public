@@ -1,0 +1,62 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+$os\
+$username\
+[](fg:#6b6b6b bg:#2d2d2d)\
+$directory\
+$git_branch\
+$git_status\
+[](fg:#6b6b6b bg:#2d2d2d)\
+$time\
+[ ](fg:#2d2d2d)\
+"""
+
+[username]
+show_always = true
+style_user = "fg:#cdd6f4 bg:#2d2d2d"
+style_root = "fg:#f38ba8 bg:#2d2d2d"
+format = '[ $user ]($style)'
+disabled = false
+
+[os]
+style = "fg:#cdd6f4 bg:#2d2d2d"
+disabled = true
+
+[directory]
+style = "fg:#f38ba8 bg:#2d2d2d"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+
+# Separator embedded inside git_branch — only renders when in a git repo
+[git_branch]
+symbol = ""
+style = "fg:#fab387 bg:#2d2d2d"
+format = '[](fg:#6b6b6b bg:#2d2d2d)[ $symbol $branch ]($style)'
+
+[git_status]
+style = "fg:#fab387 bg:#2d2d2d"
+format = '[$all_status$ahead_behind ]($style)'
+
+[nodejs]
+symbol = ""
+style = "fg:#89dceb bg:#2d2d2d"
+format = '[](fg:#6b6b6b bg:#2d2d2d)[ $symbol ($version) ]($style)'
+
+[docker_context]
+symbol = " "
+style = "fg:#a6e3a1 bg:#2d2d2d"
+format = '[](fg:#6b6b6b bg:#2d2d2d)[ $symbol $context ]($style)'
+
+[time]
+disabled = false
+time_format = "%R"
+style = "fg:#cba6f7 bg:#2d2d2d"
+format = '[ ♥ $time ]($style)'
