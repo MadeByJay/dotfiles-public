@@ -41,9 +41,6 @@ link .config/nvim/lua/plugins/example.lua
 link .config/nvim/lua/plugins/lang.lua
 link .config/nvim/lua/plugins/tools.lua
 
-# ── Terminal ──────────────────────────────────────────────────────────────────
-link .config/wezterm/wezterm.lua
-
 # ── Codegraph (MCP for Claude Code) ──────────────────────────────────────────
 if command -v npm &>/dev/null; then
     echo "  installing codegraph..."
