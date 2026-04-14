@@ -50,10 +50,10 @@ if command -v npm &>/dev/null; then
     echo "  installing codegraph..."
     npm install -g @colbymchenry/codegraph
 
-    # Wire up MCP server in ~/.claude.json
+    # Wire up MCP servers in ~/.claude.json
     if command -v python3 &>/dev/null; then
         python3 - <<'EOF'
-import json, os, sys
+import json, os
 
 claude_json = os.path.expanduser("~/.claude.json")
 config = {}
@@ -61,16 +61,24 @@ if os.path.exists(claude_json):
     with open(claude_json) as f:
         config = json.load(f)
 
-config.setdefault("mcpServers", {})["codegraph"] = {
+mcp = config.setdefault("mcpServers", {})
+
+mcp["codegraph"] = {
     "type": "stdio",
     "command": "codegraph",
     "args": ["serve", "--mcp"]
 }
 
+mcp["playwright"] = {
+    "type": "stdio",
+    "command": "npx",
+    "args": ["@playwright/mcp@latest", "--no-sandbox"]
+}
+
 with open(claude_json, "w") as f:
     json.dump(config, f, indent=2)
 
-print("  wired codegraph MCP → ~/.claude.json")
+print("  wired codegraph + playwright MCP → ~/.claude.json")
 EOF
     fi
 else
