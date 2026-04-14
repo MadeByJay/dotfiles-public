@@ -48,7 +48,7 @@ link .config/nvim/lua/plugins/tools.lua
 # ── Codegraph (MCP for Claude Code) ──────────────────────────────────────────
 if command -v npm &>/dev/null; then
     echo "  installing codegraph..."
-    npm install -g @colbymchenry/codegraph
+    sudo npm install -g @colbymchenry/codegraph
 
     # Wire up MCP servers in ~/.claude.json
     if command -v python3 &>/dev/null; then
