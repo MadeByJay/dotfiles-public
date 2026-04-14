@@ -1,0 +1,57 @@
+# Container bashrc — optimized for devcontainer environment
+# Sourced by install.sh into ~/.bashrc
+
+# ── History ──────────────────────────────────────────────────────────────────
+HISTSIZE=50000
+HISTFILESIZE=50000
+HISTFILE="$HOME/.bash_history"
+HISTCONTROL=ignoredups:erasedups
+shopt -s histappend
+
+# ── Environment ───────────────────────────────────────────────────────────────
+export EDITOR="nvim"
+export LANG="en_US.UTF-8"
+export PATH="$HOME/.local/bin:/usr/local/bin:$PATH"
+
+# pyenv (container-local, under jenkins user)
+export PYENV_ROOT="/var/lib/jenkins/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PYENV_ROOT/shims:$PATH"
+
+# ── Aliases ───────────────────────────────────────────────────────────────────
+alias ll='ls -lhF --color=auto'
+alias la='ls -lAhF --color=auto'
+alias l='ls -CF --color=auto'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias grep='grep --color=auto'
+alias reload='source ~/.bashrc'
+
+# Git
+alias gs='git status'
+alias gd='git diff'
+alias gl='git log --oneline --graph --decorate'
+
+# npm
+alias nr='npm run'
+
+# fzf
+alias f='fzf'
+
+# Navigation
+alias repos='cd ~/repos'
+alias adl='cd ~/ad-filtering'
+
+# Python / uv
+alias py='python'
+alias uvr='uv run'
+
+# Docker
+alias dps='docker ps'
+alias dcp='docker compose'
+alias dcup='docker compose up -d'
+alias dcdn='docker compose down'
+
+# ── Prompt ────────────────────────────────────────────────────────────────────
+if command -v starship &>/dev/null; then
+    eval "$(starship init bash)"
+fi

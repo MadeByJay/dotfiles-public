@@ -17,16 +17,20 @@ link() {
 
 # ── Shell ─────────────────────────────────────────────────────────────────────
 if [ -f /.dockerenv ] || [ -n "${REMOTE_CONTAINERS:-}" ] || [ -n "${CODESPACES:-}" ]; then
-    ln -sf "$DOTFILES/.zshrc-container" "$HOME/.zshrc"
-    echo "  linked .zshrc-container → ~/.zshrc (container)"
+    # Container: inject into existing ~/.bashrc (idempotent)
+    MARKER="# dotfiles: container config"
+    if ! grep -qF "$MARKER" "$HOME/.bashrc" 2>/dev/null; then
+        printf '\n%s\n[ -f "%s/.bashrc-container" ] && source "%s/.bashrc-container"\n' \
+            "$MARKER" "$DOTFILES" "$DOTFILES" >> "$HOME/.bashrc"
+    fi
+    echo "  sourcing .bashrc-container from ~/.bashrc"
 else
     link .zshrc
+    # ── ZSH config ──────────────────────────────────────────────────────────
+    link .config/zsh/aliases.zsh
+    link .config/zsh/env.zsh
+    link .config/zsh/history.zsh
 fi
-
-# ── ZSH config ────────────────────────────────────────────────────────────────
-link .config/zsh/aliases.zsh
-link .config/zsh/env.zsh
-link .config/zsh/history.zsh
 
 # ── Prompt ────────────────────────────────────────────────────────────────────
 link .config/starship.toml
