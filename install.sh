@@ -36,6 +36,14 @@ fi
 # ── Prompt ────────────────────────────────────────────────────────────────────
 link .config/starship.toml
 
+# ── Starship (install if missing) ─────────────────────────────────────────────
+if ! command -v starship &>/dev/null; then
+    echo "  installing starship..."
+    curl -sS https://starship.rs/install.sh | sh -s -- --yes --bin-dir "$HOME/.local/bin"
+else
+    echo "  starship already installed"
+fi
+
 # ── Editor ────────────────────────────────────────────────────────────────────
 link .config/nvim/init.lua
 link .config/nvim/lua/config/autocmds.lua
