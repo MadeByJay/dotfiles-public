@@ -39,6 +39,7 @@ link .config/starship.toml
 # ── Starship (install if missing) ─────────────────────────────────────────────
 if ! command -v starship &>/dev/null; then
     echo "  installing starship..."
+    mkdir -p "$HOME/.local/bin"
     curl -sS https://starship.rs/install.sh | sh -s -- --yes --bin-dir "$HOME/.local/bin"
 else
     echo "  starship already installed"
