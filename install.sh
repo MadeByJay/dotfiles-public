@@ -31,6 +31,24 @@ else
     link .config/zsh/aliases.zsh
     link .config/zsh/env.zsh
     link .config/zsh/history.zsh
+
+    # ── Secrets (local only, never committed) ────────────────────────────────
+    SECRETS="$HOME/.config/zsh/secrets.zsh"
+    if [ ! -f "$SECRETS" ]; then
+        mkdir -p "$(dirname "$SECRETS")"
+        cat > "$SECRETS" <<'SECRETS_EOF'
+# Local secrets — not tracked in dotfiles
+# Add API keys and sensitive env vars here
+
+# export ANTHROPIC_API_KEY=""
+# export OPENAI_API_KEY=""
+# export AWS_ACCESS_KEY_ID=""
+# export AWS_SECRET_ACCESS_KEY=""
+SECRETS_EOF
+        echo "  created ~/.config/zsh/secrets.zsh (template — fill in your secrets)"
+    else
+        echo "  ~/.config/zsh/secrets.zsh already exists, skipping"
+    fi
 fi
 
 # ── Prompt ────────────────────────────────────────────────────────────────────
