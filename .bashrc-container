@@ -54,6 +54,9 @@ alias dcdn='docker compose down'
 # ── Secrets (mounted from host) ───────────────────────────────────────────────
 [ -f "$HOME/.config/zsh/secrets.zsh" ] && source "$HOME/.config/zsh/secrets.zsh"
 
+# ── Jira + Confluence
+[ -f "$HOME/.config/zsh/jira.zsh" ] && source "$HOME/.config/zsh/jira.zsh"
+
 # ── Prompt ────────────────────────────────────────────────────────────────────
 if command -v starship &>/dev/null; then
     eval "$(starship init bash)"
