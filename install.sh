@@ -21,7 +21,10 @@ if [ -f /.dockerenv ] || [ -n "${REMOTE_CONTAINERS:-}" ] || [ -n "${CODESPACES:-
     # Container: inject into existing ~/.bashrc (idempotent)
     MARKER="# dotfiles: container config"
     if ! grep -qF "$MARKER" "$HOME/.bashrc" 2>/dev/null; then
-        printf '\n%s\n[ -f "%s/.bashrc-container" ] && source "%s/.bashrc-container"\n' \
+        printf '
+%s
+[ -f "%s/.bashrc-container" ] && source "%s/.bashrc-container"
+' \
             "$MARKER" "$DOTFILES" "$DOTFILES" >> "$HOME/.bashrc"
     fi
     echo "  sourcing .bashrc-container from ~/.bashrc"
@@ -43,6 +46,19 @@ if ! command -v starship &>/dev/null; then
     curl -sS https://starship.rs/install.sh | sh -s -- --yes --bin-dir "$HOME/.local/bin"
 else
     echo "  starship already installed"
+fi
+
+# ── GitHub CLI ────────────────────────────────────────────────────────────────
+if ! command -v gh &>/dev/null; then
+    echo "  installing gh CLI..."
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+        | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg 2>/dev/null
+    chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
+        | tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+    apt-get update -qq && apt-get install -y gh
+else
+    echo "  gh already installed"
 fi
 
 # ── Editor ────────────────────────────────────────────────────────────────────
