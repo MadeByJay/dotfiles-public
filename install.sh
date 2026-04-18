@@ -37,7 +37,6 @@ else
 fi
 
 # ── Prompt ────────────────────────────────────────────────────────────────────
-link .config/zsh/jira.zsh
 link .config/starship.toml
 
 # ── Starship (install if missing) ─────────────────────────────────────────────
