@@ -52,11 +52,11 @@ fi
 if ! command -v gh &>/dev/null; then
     echo "  installing gh CLI..."
     curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
-        | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg 2>/dev/null
-    chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+        | sudo -n dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg 2>/dev/null
+    sudo -n chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
-        | tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-    apt-get update -qq && apt-get install -y gh
+        | sudo -n tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+    sudo -n apt-get update -qq && sudo -n apt-get install -y gh
 else
     echo "  gh already installed"
 fi
@@ -71,18 +71,26 @@ link .config/nvim/lua/plugins/example.lua
 link .config/nvim/lua/plugins/lang.lua
 link .config/nvim/lua/plugins/tools.lua
 
+# ── LazyVim bootstrap ────────────────────────────────────────────────────────
+# Headless plugin sync — installs lazy.nvim and all plugins on first run.
+# Non-fatal if it fails so container setup completes.
+if command -v nvim &>/dev/null; then
+    echo "  bootstrapping lazyvim plugins..."
+    nvim --headless "+Lazy! sync" +qa 2>&1 | tail -5 || echo "  lazyvim bootstrap had issues (non-fatal)"
+else
+    echo "  nvim not found — skipping lazyvim bootstrap"
+fi
+
 # ── Codegraph (MCP for Claude Code) ──────────────────────────────────────────
 if command -v npm &>/dev/null; then
-    # Use user-local npm prefix so no sudo needed and binaries are on PATH
     npm config set prefix "$HOME/.npm-global"
     export PATH="$HOME/.npm-global/bin:$PATH"
 
     echo "  installing codegraph..."
     npm install -g @colbymchenry/codegraph
 
-    # Wire up MCP servers in ~/.claude.json
     if command -v python3 &>/dev/null; then
-        python3 - <<'EOF'
+        python3 - <<'PYEOF'
 import json, os
 
 claude_json = os.path.expanduser("~/.claude.json")
@@ -92,24 +100,14 @@ if os.path.exists(claude_json):
         config = json.load(f)
 
 mcp = config.setdefault("mcpServers", {})
-
-mcp["codegraph"] = {
-    "type": "stdio",
-    "command": "codegraph",
-    "args": ["serve", "--mcp"]
-}
-
-mcp["playwright"] = {
-    "type": "stdio",
-    "command": "npx",
-    "args": ["@playwright/mcp@latest", "--no-sandbox"]
-}
+mcp["codegraph"] = {"type": "stdio", "command": "codegraph", "args": ["serve", "--mcp"]}
+mcp["playwright"] = {"type": "stdio", "command": "npx", "args": ["@playwright/mcp@latest", "--no-sandbox"]}
 
 with open(claude_json, "w") as f:
     json.dump(config, f, indent=2)
 
-print("  wired codegraph + playwright MCP → ~/.claude.json")
-EOF
+print("  wired codegraph + playwright MCP -> ~/.claude.json")
+PYEOF
     fi
 else
     echo "  npm not found — skipping codegraph install"
