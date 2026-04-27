@@ -71,6 +71,31 @@ link .config/nvim/lua/plugins/example.lua
 link .config/nvim/lua/plugins/lang.lua
 link .config/nvim/lua/plugins/tools.lua
 
+# ── System tools (lazyvim deps + dev nice-to-haves) ──────────────────────────
+echo "  installing system tools..."
+sudo -n apt-get update -qq || true
+sudo -n apt-get install -y \
+    build-essential unzip \
+    ripgrep fd-find \
+    fzf bat \
+    xclip xsel \
+    || echo "  some apt installs failed (non-fatal)"
+
+# Debian/Ubuntu name collisions: shim to expected names
+mkdir -p "$HOME/.local/bin"
+[ -x /usr/bin/batcat ] && ln -sf /usr/bin/batcat "$HOME/.local/bin/bat"
+[ -x /usr/bin/fdfind ] && ln -sf /usr/bin/fdfind "$HOME/.local/bin/fd"
+
+# lazygit — install from binary (not in older Ubuntu repos)
+if ! command -v lazygit &>/dev/null; then
+    echo "  installing lazygit..."
+    LAZYGIT_VERSION="0.44.1"
+    curl -fsSL "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz" \
+        | tar xz -C "$HOME/.local/bin" lazygit
+else
+    echo "  lazygit already installed"
+fi
+
 # ── Neovim (install if missing) ──────────────────────────────────────────────
 if ! command -v nvim &>/dev/null; then
     echo "  installing neovim..."
