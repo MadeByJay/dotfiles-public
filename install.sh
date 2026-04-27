@@ -71,6 +71,20 @@ link .config/nvim/lua/plugins/example.lua
 link .config/nvim/lua/plugins/lang.lua
 link .config/nvim/lua/plugins/tools.lua
 
+# ── Neovim (install if missing) ──────────────────────────────────────────────
+if ! command -v nvim &>/dev/null; then
+    echo "  installing neovim..."
+    NVIM_VERSION="v0.10.4"
+    NVIM_PREFIX="$HOME/.local/share/nvim-bin"
+    mkdir -p "$NVIM_PREFIX" "$HOME/.local/bin"
+    curl -fsSL "https://github.com/neovim/neovim/releases/download/${NVIM_VERSION}/nvim-linux64.tar.gz" \
+        | tar xz -C "$NVIM_PREFIX" --strip-components=1
+    ln -sf "$NVIM_PREFIX/bin/nvim" "$HOME/.local/bin/nvim"
+    echo "  installed nvim to $HOME/.local/bin/nvim"
+else
+    echo "  nvim already installed: $(nvim --version | head -1)"
+fi
+
 # ── LazyVim bootstrap ────────────────────────────────────────────────────────
 # Headless plugin sync — installs lazy.nvim and all plugins on first run.
 # Non-fatal if it fails so container setup completes.
