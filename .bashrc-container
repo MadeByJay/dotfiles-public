@@ -58,6 +58,7 @@ alias dcdn='docker compose down'
 # ── Shared shell functions (jira, confluence) ─────────────────────────────
 _DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 [ -f "$_DOTFILES_DIR/.config/shell/jira.sh" ] && source "$_DOTFILES_DIR/.config/shell/jira.sh"
+[ -f "$_DOTFILES_DIR/.config/shell/db.sh" ] && source "$_DOTFILES_DIR/.config/shell/db.sh"
 
 # ── Prompt ────────────────────────────────────────────────────────────────────
 if command -v starship &>/dev/null; then
