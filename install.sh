@@ -128,6 +128,10 @@ if command -v npm &>/dev/null; then
 
     if command -v codegraph &>/dev/null; then
         echo "  codegraph already installed"
+    elif [ -f /.dockerenv ] || [ -n "${REMOTE_CONTAINERS:-}" ]; then
+        # In the dev container, bolt setup installs a pinned codegraph; an unpinned install
+        # here would win the race and upgrade it unasked.
+        echo "  codegraph: left to bolt setup in the container"
     else
         echo "  installing codegraph..."
         npm install -g @colbymchenry/codegraph
